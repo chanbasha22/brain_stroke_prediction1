@@ -1,6 +1,4 @@
-# stroke_prediction_app.py
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import pickle
 import numpy as np
 
@@ -10,7 +8,11 @@ app = Flask(__name__)
 model = pickle.load(open('stroke_model.pkl', 'rb'))
 
 @app.route('/')
-def index():
+def home():
+    return render_template('home.html')  # New landing page
+
+@app.route('/predict_form')
+def predict_form():
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])

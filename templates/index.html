@@ -2,50 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Brain Stroke Prediction</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Enter Your Health Info</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+
   <div class="container mt-5">
-    <div class="card p-4 shadow">
-      <h2 class="mb-4 text-center">🧠 Brain Stroke Prediction</h2>
+    <div class="card shadow-lg p-5">
+      <h2 class="text-center mb-4">📝 Enter Health Details</h2>
       <form action="/predict" method="POST">
-        <div class="row g-3">
+        <div class="row g-4">
           <div class="col-md-6">
-            <label>Gender</label>
-            <select class="form-select" name="gender">
+            <label class="form-label">Gender</label>
+            <select name="gender" class="form-select">
               <option>Male</option>
               <option>Female</option>
             </select>
           </div>
+
           <div class="col-md-6">
-            <label>Age</label>
+            <label class="form-label">Age</label>
             <input type="number" name="age" class="form-control" required>
           </div>
+
           <div class="col-md-6">
-            <label>Hypertension</label>
-            <select class="form-select" name="hypertension">
+            <label class="form-label">Hypertension</label>
+            <select name="hypertension" class="form-select">
               <option value="0">No</option>
               <option value="1">Yes</option>
             </select>
           </div>
+
           <div class="col-md-6">
-            <label>Heart Disease</label>
-            <select class="form-select" name="heart_disease">
+            <label class="form-label">Heart Disease</label>
+            <select name="heart_disease" class="form-select">
               <option value="0">No</option>
               <option value="1">Yes</option>
             </select>
           </div>
+
           <div class="col-md-6">
-            <label>Ever Married</label>
-            <select class="form-select" name="ever_married">
+            <label class="form-label">Ever Married</label>
+            <select name="ever_married" class="form-select">
               <option>Yes</option>
               <option>No</option>
             </select>
           </div>
+
           <div class="col-md-6">
-            <label>Work Type</label>
-            <select class="form-select" name="work_type">
+            <label class="form-label">Work Type</label>
+            <select name="work_type" class="form-select">
               <option>Private</option>
               <option>Self-employed</option>
               <option>Govt_job</option>
@@ -53,24 +59,28 @@
               <option>Never_worked</option>
             </select>
           </div>
+
           <div class="col-md-6">
-            <label>Residence Type</label>
-            <select class="form-select" name="Residence_type">
+            <label class="form-label">Residence Type</label>
+            <select name="Residence_type" class="form-select">
               <option>Urban</option>
               <option>Rural</option>
             </select>
           </div>
+
           <div class="col-md-6">
-            <label>Avg Glucose Level</label>
+            <label class="form-label">Avg Glucose Level</label>
             <input type="number" step="0.01" name="avg_glucose_level" class="form-control" required>
           </div>
+
           <div class="col-md-6">
-            <label>BMI</label>
+            <label class="form-label">BMI</label>
             <input type="number" step="0.01" name="bmi" class="form-control" required>
           </div>
+
           <div class="col-md-6">
-            <label>Smoking Status</label>
-            <select class="form-select" name="smoking_status">
+            <label class="form-label">Smoking Status</label>
+            <select name="smoking_status" class="form-select">
               <option>never smoked</option>
               <option>formerly smoked</option>
               <option>smokes</option>
@@ -78,11 +88,12 @@
             </select>
           </div>
         </div>
-        <div class="mt-4 text-center">
-          <button type="submit" class="btn btn-primary">Predict</button>
+        <div class="text-center mt-4">
+          <button class="btn btn-success btn-lg">Predict Stroke Risk</button>
         </div>
       </form>
     </div>
   </div>
+
 </body>
 </html>

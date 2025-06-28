@@ -4,17 +4,31 @@
   <meta charset="UTF-8">
   <title>Enter Your Health Info</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      min-height: 100vh;
+    }
+    .card {
+      border-radius: 20px;
+      background: #ffffffee;
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body class="d-flex justify-content-center align-items-center">
 
-  <div class="container mt-5">
+  <div class="container my-5">
     <div class="card shadow-lg p-5">
       <h2 class="text-center mb-4">📝 Enter Health Details</h2>
+
       <form action="/predict" method="POST">
+        <!-- Hidden email carried from previous page -->
+        <input type="hidden" name="email" value="{{ user_email }}">
+
         <div class="row g-4">
           <div class="col-md-6">
             <label class="form-label">Gender</label>
-            <select name="gender" class="form-select">
+            <select name="gender" class="form-select" required>
               <option>Male</option>
               <option>Female</option>
             </select>
@@ -27,7 +41,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Hypertension</label>
-            <select name="hypertension" class="form-select">
+            <select name="hypertension" class="form-select" required>
               <option value="0">No</option>
               <option value="1">Yes</option>
             </select>
@@ -35,7 +49,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Heart Disease</label>
-            <select name="heart_disease" class="form-select">
+            <select name="heart_disease" class="form-select" required>
               <option value="0">No</option>
               <option value="1">Yes</option>
             </select>
@@ -43,7 +57,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Ever Married</label>
-            <select name="ever_married" class="form-select">
+            <select name="ever_married" class="form-select" required>
               <option>Yes</option>
               <option>No</option>
             </select>
@@ -51,7 +65,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Work Type</label>
-            <select name="work_type" class="form-select">
+            <select name="work_type" class="form-select" required>
               <option>Private</option>
               <option>Self-employed</option>
               <option>Govt_job</option>
@@ -62,7 +76,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Residence Type</label>
-            <select name="Residence_type" class="form-select">
+            <select name="Residence_type" class="form-select" required>
               <option>Urban</option>
               <option>Rural</option>
             </select>
@@ -80,7 +94,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Smoking Status</label>
-            <select name="smoking_status" class="form-select">
+            <select name="smoking_status" class="form-select" required>
               <option>never smoked</option>
               <option>formerly smoked</option>
               <option>smokes</option>
@@ -88,12 +102,128 @@
             </select>
           </div>
         </div>
+
         <div class="text-center mt-4">
-          <button class="btn btn-success btn-lg">Predict Stroke Risk</button>
+          <button class="btn btn-success btn-lg px-5">Predict Stroke Risk</button>
         </div>
       </form>
     </div>
   </div>
+ <!-- Chatbot Widget -->
+<div id="chatbot" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+  <button id="chatToggle" class="btn btn-primary rounded-circle" style="width: 50px; height: 50px; font-size: 20px;">
+    💬
+  </button>
+  <div id="chatWindow" class="card shadow p-3" style="display: none; width: 250px; height: 300px; overflow-y: auto; position: absolute; bottom: 60px; right: 0;">
+    <div style="font-weight: bold; margin-bottom: 8px;">🧠 Health Assistant</div>
+    <div id="chatMessages" style="height: 180px; overflow-y: auto; font-size: 13px;"></div>
+    <div class="input-group mt-2">
+      <input type="text" id="chatInput" class="form-control form-control-sm" placeholder="Ask...">
+      <button class="btn btn-sm btn-outline-secondary" onclick="sendChat()">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const chatToggle = document.getElementById("chatToggle");
+const chatWindow = document.getElementById("chatWindow");
+const chatInput = document.getElementById("chatInput");
+const chatMessages = document.getElementById("chatMessages");
+
+chatToggle.addEventListener("click", () => {
+  chatWindow.style.display = chatWindow.style.display === "none" ? "block" : "none";
+});
+
+function sendChat() {
+  const userMessage = chatInput.value.trim();
+  if (!userMessage) return;
+
+  addChatMessage("You", userMessage);
+  chatInput.value = "";
+
+  let response = "🤖 I'm here to help with appointments, doctors, hours, insurance, and emergencies. Ask me anything!";
+  const msg = userMessage.toLowerCase();
+
+  if (["gm", "good morning"].includes(msg)) {
+    response = "🌞 Good Morning! How can I assist you today?";
+  } else if (["gn", "good night"].includes(msg)) {
+    response = "🌙 Good night! Take care and rest well.";
+  } else if (msg.includes("hi") || msg.includes("hello") || msg.includes("hai")) {
+    response = "Welcome to Prediction App Assistant 👨‍⚕️ How can I assist you today?";
+  } else if (["yes", "yeah", "yup", "ya", "sure", "of course"].includes(msg)) {
+    response = "Great! 👍 Let me know the details or what you'd like to proceed with.";
+  } else if (["no", "nope", "nah", "not now"].includes(msg)) {
+    response = "No problem 😊 Let me know whenever you're ready.";
+  } else if (msg.includes("appointment")) {
+    response = "Sure, do you want to book an appointment with a General Physician, Dentist, or Pediatrician?";
+  } else if (msg.includes("general") || msg.includes("physician")) {
+    response = "Dr. Anil Kumar (General Physician) is available from 10 AM to 1 PM. Would you like to book a slot?";
+  } else if (msg.includes("dentist")) {
+    response = "Dr. Rekha Sharma (Dentist) is available from 2 PM to 5 PM. Would you like to book an appointment?";
+  } else if (msg.includes("pediatrician")) {
+    response = "Dr. Neha Joshi (Pediatrician) is available from 9 AM to 12 PM. Shall I book your visit?";
+  } else if (msg.includes("cardiologist")) {
+    response = "Dr. Ramesh Varma (Cardiologist) is available on Mon, Wed, Fri from 10 AM to 12 PM.";
+  } else if (msg.includes("orthopedic") || msg.includes("bone doctor")) {
+    response = "Dr. Sudheer Reddy (Orthopedic Surgeon) is available on Tue, Thu, Sat from 11 AM to 1 PM.";
+  } else if (msg.includes("ambulance")) {
+    response = "Yes, we provide 24x7 ambulance services. Call 📞 1800-123-456 for immediate help.";
+  } else if (msg.includes("emergency")) {
+    response = "For emergencies, please call our 24x7 helpline: 📞 1800-123-456 or rush to the ER immediately!";
+  } else if (msg.includes("services")) {
+    response = "We offer General Medicine, Dental, Pediatrics, Cardiology, Orthopedics, Lab Tests, Vaccination, and more.";
+  } else if (msg.includes("vaccine")) {
+    response = "Yes, we offer COVID-19, Hepatitis, Typhoid, and Flu vaccines for all age groups.";
+  } else if (msg.includes("insurance")) {
+    response = "Yes, we accept major health insurances like Star Health, Niva Bupa, ICICI Lombard, and others.";
+  } else if (msg.includes("blood test") || msg.includes("lab")) {
+    response = "Yes, we have a full lab testing facility open from 8 AM to 6 PM. No appointment needed.";
+  } else if (msg.includes("opd") || msg.includes("outpatient")) {
+    response = "OPD timings are 8 AM to 8 PM, Monday to Saturday.";
+  } else if (msg.includes("hours") || msg.includes("timing") || msg.includes("open")) {
+    response = "City Hospital is open Monday to Saturday from 8 AM to 8 PM. Emergency service: 24/7.";
+  } else if (msg.includes("location") || msg.includes("address")) {
+    response = "Predication Creators is located at 📍 Vasavi College, Tadepalligudem.";
+  } else if (msg.includes("date")) {
+    const today = new Date();
+    response = `📅 Today's date is ${today.toDateString()}.`;
+  } else if (msg.includes("time")) {
+    const now = new Date();
+    response = `🕒 The current time is ${now.toLocaleTimeString()}.`;
+  } else if (msg.includes("bmi") || msg.includes("body mass index")) {
+    response = "🧮 A healthy BMI is between 18.5 and 24.9.";
+  } else if (msg.includes("glucose") || msg.includes("sugar level")) {
+    response = "🩸 Normal blood glucose level (fasting) is between 70–99 mg/dL.";
+  } else if (msg.includes("heartbeat") || msg.includes("heart rate")) {
+    response = "❤️ Normal heart rate is 60–100 bpm at rest.";
+  } else if (msg.includes("pulse")) {
+    response = "💓 Pulse is the same as heart rate and can be felt on your wrist or neck.";
+  } else if (msg.includes("blood pressure") || msg.includes("bp")) {
+    response = "🔴 Normal BP is around 120/80 mmHg.";
+  } else if (msg.includes("oxygen") || msg.includes("spo2")) {
+    response = "🫁 SpO2 levels should be between 95% and 100%.";
+  } else if (msg.includes("fever") || msg.includes("temperature")) {
+    response = "🌡️ Fever is body temp above 100.4°F (38°C).";
+  } else if (["ok", "okay", "fine", "cool", "nice", "great", "good", "hmm"].includes(msg)) {
+    response = "Alright! Let me know if you have any more questions. 😊";
+  } else if (msg.includes("thank")) {
+    response = "You're most welcome! 🙏 Stay safe and healthy.";
+  } else if (msg.includes("bye")) {
+    response = "Goodbye! 👋 Wishing you good health. Come back if you need anything.";
+  }
+
+  setTimeout(() => addChatMessage("Bot", response), 500);
+}
+
+function addChatMessage(sender, message) {
+  const div = document.createElement("div");
+  div.innerHTML = `<strong>${sender}:</strong> ${message}`;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+</script>
+
+
 
 </body>
 </html>
